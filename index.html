@@ -190,6 +190,20 @@
   }
   .era-btn.active .name { color: var(--btn-c); }
 
+  .era-dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .era-dropdown-inner {
+    padding: 4px 0 8px;
+  }
+
+  @media (max-width: 720px) {
+    .cs-pane { display: none; }
+    .era-dropdown.open { max-height: 2000px; }
+  }
+
   /* right: case studies */
   .cs-pane {
     padding: 0 0 0 40px;
@@ -430,19 +444,39 @@
 
   let active = 0;
 
+  function csItemsHTML(era) {
+    return era.caseStudies.length
+      ? era.caseStudies.map(cs => `
+        <a class="cs fade-in" href="${cs.url}" target="_blank" rel="noopener">
+          <div class="cs-top">
+            <span class="cs-title">${cs.title}</span>
+            <span class="cs-arrow">↗</span>
+          </div>
+        </a>
+      `).join('')
+      : `<div class="cs-empty">Nothing filed here yet.</div>`;
+  }
+
   function renderIndex() {
     const el = document.getElementById('era-index');
     el.innerHTML = ERAS.map((era, i) => `
-      <button class="era-btn ${i === active ? 'active' : ''}" style="--btn-c:${era.color}"
-        onclick="select(${i})"
-        onmouseenter="tintScreen('${era.color}')"
-        onmouseleave="resetScreen()">
-        <span class="num">${String(i + 1).padStart(2, '0')}</span>
-        <span class="body">
-          <span class="name">${era.name}</span>
-          <span class="yr">${era.year}</span>
-        </span>
-      </button>
+      <div class="era-item">
+        <button class="era-btn ${i === active ? 'active' : ''}" style="--btn-c:${era.color}"
+          onclick="select(${i})"
+          onmouseenter="tintScreen('${era.color}')"
+          onmouseleave="resetScreen()">
+          <span class="num">${String(i + 1).padStart(2, '0')}</span>
+          <span class="body">
+            <span class="name">${era.name}</span>
+            <span class="yr">${era.year}</span>
+          </span>
+        </button>
+        <div class="era-dropdown ${i === active ? 'open' : ''}" style="--accent:${era.color}">
+          <div class="era-dropdown-inner">
+            ${csItemsHTML(era)}
+          </div>
+        </div>
+      </div>
     `).join('');
 
     const total = ERAS.reduce((n, e) => n + e.caseStudies.length, 0);
@@ -464,17 +498,7 @@
     document.getElementById('cs-era-count').textContent =
       `${era.caseStudies.length} ${era.caseStudies.length === 1 ? 'project' : 'projects'}`;
 
-    const list = document.getElementById('cs-list');
-    list.innerHTML = era.caseStudies.length
-      ? era.caseStudies.map(cs => `
-        <a class="cs fade-in" href="${cs.url}" target="_blank" rel="noopener">
-          <div class="cs-top">
-            <span class="cs-title">${cs.title}</span>
-            <span class="cs-arrow">↗</span>
-          </div>
-        </a>
-      `).join('')
-      : `<div class="cs-empty">Nothing filed here yet.</div>`;
+    document.getElementById('cs-list').innerHTML = csItemsHTML(era);
   }
 
   function select(i) {

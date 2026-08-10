@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AbdulRahman — Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Archivo+Expanded:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0C0C0D;
+    --surface: #151517;
+    --line: rgba(255,255,255,0.12);
+    --line-soft: rgba(255,255,255,0.06);
+    --text: #F2F0EB;
+    --text-dim: #8B8985;
+    --text-faint: #57565330;
+    --accent: #D6FF3F;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Archivo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    overflow-x: hidden;
+    transition: background-color 0.5s ease;
+  }
+
+  .frame {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .sig {
+    font-family: 'Archivo Expanded', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+  }
+  .topbar .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    padding: 88px 0 64px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero h1 {
+    font-family: 'Archivo Expanded', sans-serif;
+    font-weight: 700;
+    font-size: clamp(40px, 7vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero .lede {
+    max-width: 480px;
+    font-size: 17px;
+    font-weight: 400;
+    color: #C9C6C0;
+    line-height: 1.6;
+  }
+  .hero .lede b { color: var(--text); font-weight: 500; }
+
+  /* ---------- eras / work ---------- */
+  .work {
+    padding: 56px 0 40px;
+  }
+  .work-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .work-head h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 24px;
+  }
+
+  /* left: era index */
+  .era-index {
+    border-right: 1px solid var(--line);
+  }
+  .era-btn {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line-soft);
+    padding: 24px 28px 24px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    color: var(--text-dim);
+    transition: color 0.25s ease, background 0.25s ease, padding 0.18s ease;
+    position: relative;
+  }
+  .era-btn:hover {
+    color: var(--text);
+    padding-left: 12px;
+  }
+  .era-btn .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding-top: 5px;
+    color: var(--text-faint);
+    transition: color 0.25s ease;
+  }
+  .era-btn:hover .num { color: var(--btn-c); }
+  .era-btn .body { flex: 1; }
+  .era-btn .name {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    transition: color 0.25s ease;
+  }
+  .era-btn:hover .name { color: var(--btn-c); }
+  .era-btn .yr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+  }
+  .era-btn.active {
+    color: var(--text);
+    background: color-mix(in srgb, var(--btn-c) 14%, transparent);
+  }
+  .era-btn.active .num { color: var(--btn-c); }
+  .era-btn.active::before {
+    content: '';
+    position: absolute;
+    left: -1px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--btn-c);
+  }
+  .era-btn:hover::before {
+    content: '';
+    position: absolute;
+    left: -1px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--btn-c);
+    opacity: 0.5;
+  }
+  .era-btn.active .name { color: var(--btn-c); }
+
+  /* right: case studies */
+  .cs-pane {
+    padding: 0 0 0 40px;
+    --accent: #D6FF3F;
+    transition: color 0.25s ease;
+  }
+  .cs-pane-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 24px 0 8px;
+    border-bottom: 1px solid var(--line-soft);
+    display: flex;
+    justify-content: space-between;
+  }
+  .cs {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line-soft);
+    position: relative;
+    transition: padding 0.18s ease;
+  }
+  .cs:hover { padding-left: 12px; }
+  .cs-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .cs-title {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    transition: color 0.2s ease;
+  }
+  .cs:hover .cs-title { color: var(--accent); }
+  .cs-ext {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 4px 10px;
+    flex-shrink: 0;
+    transition: all 0.18s ease;
+  }
+  .cs:hover .cs-ext { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+  .cs-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    font-size: 16px;
+    transition: color 0.2s ease;
+  }
+  .cs:hover .cs-arrow { color: var(--accent); }
+
+  .cs-empty {
+    padding: 40px 0;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  .fade-in { animation: fade 0.35s ease; }
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    margin-top: 48px;
+    padding: 40px 0 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  footer .big {
+    font-family: 'Archivo Expanded', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 44px);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  footer .big a { color: var(--text); text-decoration: none; }
+  footer .big a:hover { color: var(--accent); }
+  footer .meta { text-align: right; }
+
+  @media (max-width: 720px) {
+    .frame { padding: 0 20px; }
+    .layout { grid-template-columns: 1fr; }
+    .era-index { border-right: none; border-bottom: 1px solid var(--line); }
+    .cs-pane { padding-left: 0; }
+    .era-btn { padding-right: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .topbar { padding: 16px 0; flex-wrap: wrap; gap: 8px; }
+    .topbar .sig { font-size: 13px; }
+    .topbar .status .mono { font-size: 10px; letter-spacing: 0.06em; }
+    .hero { padding: 56px 0 40px; }
+    .work-head { flex-wrap: wrap; gap: 6px; }
+    .era-btn { padding-top: 20px; padding-bottom: 20px; gap: 12px; }
+    .era-btn .name { font-size: 19px; }
+    .cs-title { font-size: 17px; }
+    footer { flex-direction: column; align-items: flex-start; }
+    footer .meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <div class="topbar">
+    <span class="sig">ABDULRAHMAN</span>
+    <div class="status">
+      <span class="dot"></span>
+      <span class="mono">Open to select work</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>AbdulRahman</h1>
+    <p class="lede">
+      Creative lead. Lagos, Nigeria.
+    </p>
+    <p class="lede" style="margin-top: 14px;">
+      I lead creative at <b>PowerLabs</b>, working across motion, video, and brand
+      systems. Five years in, still mostly just figuring out better ways to make things.
+    </p>
+  </div>
+
+  <div class="work">
+    <div class="work-head">
+      <h2>Selected work</h2>
+      <span class="mono" id="total-count"></span>
+    </div>
+
+    <div class="layout">
+      <div class="era-index" id="era-index"></div>
+      <div class="cs-pane" id="cs-pane">
+        <div class="cs-pane-label">
+          <span id="cs-era-name">—</span>
+          <span id="cs-era-count"></span>
+        </div>
+        <div id="cs-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="big">
+      Let's make<br>something. <a href="mailto:hello@example.com">↗</a>
+    </div>
+    <div class="meta">
+      <div class="mono" style="margin-bottom:6px;">Lagos, Nigeria</div>
+      <div class="mono">LinkedIn · Email</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // ---------------------------------------------------------------
+  // Add work by adding one object to an era's `caseStudies` array.
+  // type: "caselab" or "behance".
+  // ---------------------------------------------------------------
+  const ERAS = [
+    {
+      name: 'PowerLabs',
+      year: '2024 — Present',
+      color: '#1F8A5C',
+      caseStudies: []
+    },
+    {
+      name: 'Spice 360',
+      year: '2023 — 2024',
+      color: '#B23A48',
+      caseStudies: [
+        { title: 'Make Halftime Count — Merch', url: 'https://www.behance.net/gallery/192703835/Make-Halftime-Count-Merch', type: 'behance' },
+      ]
+    },
+    {
+      name: 'Quore Media',
+      year: '2022',
+      color: '#8257E5',
+      caseStudies: []
+    },
+    {
+      name: 'AIESEC in Lagos',
+      year: '2021 — 2023',
+      color: '#5FA8FF',
+      caseStudies: [
+        { title: 'Mystique Gala — Dinner & Awards', url: 'https://www.behance.net/gallery/208896861/Mystique-Gala-Dinner-and-Awards', type: 'behance' },
+        { title: 'Sarauta — Lagos Dinner 2022', url: 'https://www.behance.net/gallery/184854895/AIESEC-In-Lagos-Dinner-2022', type: 'behance' },
+        { title: 'Agbaya Linkup — Hangout', url: 'https://www.behance.net/gallery/184720919/Agbaya-Linkup-Hangout', type: 'behance' },
+      ]
+    },
+    {
+      name: 'Early Work / Freelance',
+      year: '2020 — 2022',
+      color: '#E0792E',
+      caseStudies: [
+        { title: 'TNSS 2023', url: 'https://www.behance.net/gallery/184856283/TNSS-2023', type: 'behance' },
+      ]
+    },
+  ];
+
+  let active = 0;
+
+  function renderIndex() {
+    const el = document.getElementById('era-index');
+    el.innerHTML = ERAS.map((era, i) => `
+      <button class="era-btn ${i === active ? 'active' : ''}" style="--btn-c:${era.color}"
+        onclick="select(${i})"
+        onmouseenter="tintScreen('${era.color}')"
+        onmouseleave="resetScreen()">
+        <span class="num">${String(i + 1).padStart(2, '0')}</span>
+        <span class="body">
+          <span class="name">${era.name}</span>
+          <span class="yr">${era.year}</span>
+        </span>
+      </button>
+    `).join('');
+
+    const total = ERAS.reduce((n, e) => n + e.caseStudies.length, 0);
+    document.getElementById('total-count').textContent = `${total} projects / ${ERAS.length} eras`;
+  }
+
+  function tintScreen(color) {
+    document.body.style.backgroundColor = `color-mix(in srgb, ${color} 16%, #0C0C0D)`;
+  }
+
+  function resetScreen() {
+    document.body.style.backgroundColor = '#0C0C0D';
+  }
+
+  function renderPane() {
+    const era = ERAS[active];
+    document.getElementById('cs-pane').style.setProperty('--accent', era.color);
+    document.getElementById('cs-era-name').textContent = era.name;
+    document.getElementById('cs-era-count').textContent =
+      `${era.caseStudies.length} ${era.caseStudies.length === 1 ? 'project' : 'projects'}`;
+
+    const list = document.getElementById('cs-list');
+    list.innerHTML = era.caseStudies.length
+      ? era.caseStudies.map(cs => `
+        <a class="cs fade-in" href="${cs.url}" target="_blank" rel="noopener">
+          <div class="cs-top">
+            <span class="cs-title">${cs.title}</span>
+            <span class="cs-arrow">↗</span>
+          </div>
+        </a>
+      `).join('')
+      : `<div class="cs-empty">Nothing filed here yet.</div>`;
+  }
+
+  function select(i) {
+    active = i;
+    renderIndex();
+    renderPane();
+  }
+
+  renderIndex();
+  renderPane();
+</script>
+
+</body>
+</html>
